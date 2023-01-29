@@ -1,11 +1,7 @@
 from random import randint
 
-# Новый импорт.
-# Из модуля start_game_banner, который расположен в папке graphic_arts,
-# импортируем функцию run_screensaver().
 from graphic_arts.start_game_banner import run_screensaver
-
-# Стандартная атака и защита
+# Стандартные спец.навыки
 DEFAULT_ATTACK = 5
 DEFAULT_DEFENCE = 10
 DEFAULT_STAMINA = 80
@@ -14,9 +10,9 @@ DEFAULT_STAMINA = 80
 class Character():
     RANGE_VALUE_ATTACK = (1, 3)
     RANGE_VALUE_DEFENCE = (1, 5)
-    # Вот они — две новые константы.
     SPECIAL_BUFF = 15
     SPECIAL_SKILL = 'Удача'
+    BRIEF_DESC_CHAR_CLASS = 'отважный любитель приключений'
 
     def __init__(self, name):
         self.name = name
@@ -38,10 +34,14 @@ class Character():
         return (f'{self.name} применил специальное умение '
                 f'"{self.SPECIAL_SKILL} {self.SPECIAL_BUFF}".')
 
+    def __str__(self):
+        return f'{self.__class__.__name__} - {self.BRIEF_DESC_CHAR_CLASS}'
+
 
 class Warrior(Character):
-    BRIEF_DESC_CHAR_CLASS = (' дерзкий воин ближнего боя. '
-                             'Сильный, выносливый и отважный')
+    BRIEF_DESC_CHAR_CLASS = ('дерзкий воин ближнего боя. '
+                             'Сильный, выносливый и отважный'
+                             )
     RANGE_VALUE_ATTACK = (3, 5)
     RANGE_VALUE_DEFENCE = (5, 10)
     SPECIAL_BUFF = DEFAULT_STAMINA + 25
@@ -49,7 +49,7 @@ class Warrior(Character):
 
 
 class Mage(Character):
-    BRIEF_DESC_CHAR_CLASS = (' находчивый воин дальнего боя. '
+    BRIEF_DESC_CHAR_CLASS = ('находчивый воин дальнего боя. '
                              'Обладает высоким интеллектом')
     RANGE_VALUE_ATTACK = (5, 10)
     RANGE_VALUE_DEFENCE = (-2, 2)
@@ -58,72 +58,65 @@ class Mage(Character):
 
 
 class Healer(Character):
-    BRIEF_DESC_CHAR_CLASS = (' могущественный заклинатель. '
+    BRIEF_DESC_CHAR_CLASS = ('могущественный заклинатель. '
                              'Черпает силы из природы, веры и духов')
     RANGE_VALUE_ATTACK = (-3, -1)
     RANGE_VALUE_DEFENCE = (2, 5)
     SPECIAL_BUFF = DEFAULT_DEFENCE + 30
     SPECIAL_SKILL = 'Защита'
 
+
 warrior = Warrior('Кодослав')
 print(warrior)
 print(warrior.attack())
 
 
-def start_training(char_name: str, char_class: str) -> str:
+def choice_char_class(char_name: str) -> Character:
     """
-    Запуск цикла тренировки навыков персонажа.
-    В качестве параметров выступают имя и класс персонажа.
+    Возвращает строку с выбранным
+    классом персонажа.
     """
-    if char_class == 'warrior':
-        print(f'{char_name}, ты Воитель — отличный боец ближнего боя.')
-    if char_class == 'mage':
-        print(f'{char_name}, ты Маг — превосходный укротитель стихий.')
-    if char_class == 'healer':
-        print(f'{char_name}, ты Лекарь — чародей, способный исцелять раны.')
-    print('Потренируйся управлять своими навыками.')
-    print(
-        'Введи одну из команд: attack — чтобы атаковать противника, '
-        'defence — чтобы блокировать атаку противника или '
-        'special — чтобы использовать свою суперсилу.',
-    )
-    print('Если не хочешь тренироваться, введи команду skip.')
-    cmd: None = None
-    while cmd != 'skip':
-        cmd: str = input('Введи команду: ')
-        if cmd == 'attack':
-            Character.attack(self)
-        if cmd == 'defence':
-            Character.defence(self)
-        if cmd == 'special':
-            Character.special(self)
-    return 'Тренировка окончена.'
-
-
-def choice_char_class() -> str:
-    """Выбор класса персонажа."""
-    approve_choice: str = ''
-    char_class: str = ''
+    # Добавили словарь, в котором соотносится ввод пользователя
+    # и класс персонажа.
+    game_classes = {'warrior': Warrior, 'mage': Mage, 'healer': Healer}
+    approve_choice: str = None
     while approve_choice != 'y':
-        char_class: str = input(
-            'Введи название персонажа, за которого хочешь играть: '
-            'Воитель — warrior, Маг — mage, Лекарь — healer: ')
-        if char_class == 'warrior':
-            print(
-                'Воитель — дерзкий воин ближнего боя. '
-                'Сильный, выносливый и отважный.')
-        elif char_class == 'mage':
-            print(
-                'Маг — находчивый воин дальнего боя. '
-                'Обладает высоким интеллектом.')
-        elif char_class == 'healer':
-            print(
-                'Лекарь — могущественный заклинатель. '
-                'Черпает силы из природы, веры и духов.')
-        approve_choice: str = input(
-            'Нажми (Y), чтобы подтвердить выбор, или любую другую кнопку, '
-            'чтобы выбрать другого персонажа ').lower()
+        selected_class = input('Введи название персонажа, '
+                               'за которого хочешь играть: Воитель — warrior, '
+                               'Маг — mage, Лекарь — healer: ')
+        char_class: Character = game_classes[selected_class](char_name)
+        # Вывели в терминал описание персонажа.
+        print(char_class)
+        approve_choice = input('Нажми (Y), чтобы подтвердить выбор, '
+                               'или любую другую кнопку, '
+                               'чтобы выбрать другого персонажа ').lower()
     return char_class
+
+
+def start_training(character):
+    """
+    Принимает на вход имя и класс персонажа.
+    Возвращает сообщения о результатах цикла тренировки персонажа.
+    """
+    commands = {'attack': character.attack,
+                'defence': character.defence,
+                'special': character.special
+                }
+    print('Потренируйся управлять своими навыками.')
+    print('Введи одну из команд: attack — чтобы атаковать противника, '
+          'defence — чтобы блокировать атаку противника или '
+          'special — чтобы использовать свою суперсилу.')
+    print('Если не хочешь тренироваться, введи команду skip.')
+    cmd = None
+    while cmd != 'skip':
+        cmd = input('Введи команду: ')
+        # Вместо блока условных операторов добавьте условие
+        # принадлежности введённой команды словарю.
+        # В функции print() будет вызываться метод класса,
+        # который соответствует введённой команде.
+        if cmd in commands:
+            print(commands[cmd])
+    return 'Тренировка окончена.'
 
 
 if __name__ == '__main__':
