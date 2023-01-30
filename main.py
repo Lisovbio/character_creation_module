@@ -98,9 +98,9 @@ def start_training(char_name, char_class):
     Принимает на вход имя и класс персонажа.
     Возвращает сообщения о результатах цикла тренировки персонажа.
     """
-    commands = {'attack': Character.attack,
-                'defence': Character.defence,
-                'special': Character.special
+    commands = {'attack': char_class.attack,
+                'defence': char_class.defence,
+                'special': char_class.special
                 }
     char_class = {'warrior': ' , ты Воитель — великий мастер ближнего боя.',
                   'mage': ' , ты Маг — превосходный укротитель стихий.',
@@ -119,7 +119,7 @@ def start_training(char_name, char_class):
         # В функции print() будет вызываться метод класса,
         # который соответствует введённой команде.
         if cmd in commands:
-            print(commands[cmd])
+            print(commands[cmd]())
     return 'Тренировка окончена.'
 
 
@@ -132,5 +132,5 @@ if __name__ == '__main__':
           'Сейчас твоя выносливость — 80, атака — 5 и защита — 10.')
     print('Ты можешь выбрать один из трёх путей силы:')
     print('Воитель, Маг, Лекарь')
-    char_class: str = choice_char_class()
-    print(start_training(char_name, char_class))
+    char_class = choice_char_class()
+    start_training(char_name, char_class)
