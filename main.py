@@ -1,6 +1,6 @@
 from random import randint
-
 from graphic_arts.start_game_banner import run_screensaver
+
 # Стандартные спец.навыки
 DEFAULT_ATTACK = 5
 DEFAULT_DEFENCE = 10
@@ -39,7 +39,7 @@ class Character():
 
 
 class Warrior(Character):
-    BRIEF_DESC_CHAR_CLASS = ('дерзкий воин ближнего боя. '
+    BRIEF_DESC_CHAR_CLASS = (' дерзкий воин ближнего боя. '
                              'Сильный, выносливый и отважный'
                              )
     RANGE_VALUE_ATTACK = (3, 5)
@@ -49,7 +49,7 @@ class Warrior(Character):
 
 
 class Mage(Character):
-    BRIEF_DESC_CHAR_CLASS = ('находчивый воин дальнего боя. '
+    BRIEF_DESC_CHAR_CLASS = (' находчивый воин дальнего боя. '
                              'Обладает высоким интеллектом')
     RANGE_VALUE_ATTACK = (5, 10)
     RANGE_VALUE_DEFENCE = (-2, 2)
@@ -58,7 +58,7 @@ class Mage(Character):
 
 
 class Healer(Character):
-    BRIEF_DESC_CHAR_CLASS = ('могущественный заклинатель. '
+    BRIEF_DESC_CHAR_CLASS = (' могущественный заклинатель. '
                              'Черпает силы из природы, веры и духов')
     RANGE_VALUE_ATTACK = (-3, -1)
     RANGE_VALUE_DEFENCE = (2, 5)
@@ -71,7 +71,7 @@ print(warrior)
 print(warrior.attack())
 
 
-def choice_char_class(char_name: str) -> Character:
+def choice_char_class():
     """
     Возвращает строку с выбранным
     классом персонажа.
@@ -93,15 +93,19 @@ def choice_char_class(char_name: str) -> Character:
     return char_class
 
 
-def start_training(character):
+def start_training(char_name, char_class):
     """
     Принимает на вход имя и класс персонажа.
     Возвращает сообщения о результатах цикла тренировки персонажа.
     """
-    commands = {'attack': character.attack,
-                'defence': character.defence,
-                'special': character.special
+    commands = {'attack': Character.attack,
+                'defence': Character.defence,
+                'special': Character.special
                 }
+    char_class = {'warrior': ' , ты Воитель — великий мастер ближнего боя.',
+                  'mage': ' , ты Маг — превосходный укротитель стихий.',
+                  'healer': ' , ты Лекарь — чародей, способный исцелять раны.'
+                  }
     print('Потренируйся управлять своими навыками.')
     print('Введи одну из команд: attack — чтобы атаковать противника, '
           'defence — чтобы блокировать атаку противника или '
